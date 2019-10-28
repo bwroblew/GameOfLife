@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,12 +13,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace GameOfLife
 {
     public partial class MainWindow : Window
     {
         private GUIContext guic = null;
+        private Button[,] boardCells;
+        private World world;
+
         public MainWindow()
         {
             guic = new GUIContext
@@ -32,11 +37,12 @@ namespace GameOfLife
 
         private void InitializeGUI()
         {
-            InitializeChessboard();
+            InitializeBoard();
             this.DataContext = guic;
+            world = new World();
         }
 
-        private void InitializeChessboard()
+        private void InitializeBoard()
         {
             GridLengthConverter myGridLengthConverter = new GridLengthConverter();
             GridLength side = (GridLength)myGridLengthConverter.ConvertFromString("Auto");
@@ -54,25 +60,38 @@ namespace GameOfLife
                 LayoutRoot.ColumnDefinitions[col].Width = side;
             }
 
-            Button[,] square = new Button[rows, cols];
+            boardCells = new Button[rows, cols];
             for (int row = 0; row < rows; row++)
                 for (int col = 0; col < cols; col++)
                 {
-                    square[row, col] = new Button();
-                    square[row, col].Height = GameSettings.getInstance().BlockSize;
-                    square[row, col].Width = GameSettings.getInstance().BlockSize;
-                    Grid.SetColumn(square[row, col], col);
-                    Grid.SetRow(square[row, col], row);
-                    if ((row + col) % 2 == 0)
+                    boardCells[row, col] = new Button();
+                    boardCells[row, col].Height = GameSettings.getInstance().BlockSize;
+                    boardCells[row, col].Width = GameSettings.getInstance().BlockSize;
+                    boardCells[row, col].Click += CellButton_Click;
+                    Grid.SetColumn(boardCells[row, col], col);
+                    Grid.SetRow(boardCells[row, col], row);
+                    boardCells[row, col].Style = Application.Current.FindResource("ButtonWhite") as Style;
+                    LayoutRoot.Children.Add(boardCells[row, col]);
+                }
+        }
+
+        private void UpdateBoard()
+        {
+            var livingCells = world.GetCurrentState();
+            for (int row = 0; row < livingCells.GetLength(0); row++)
+            {
+                for (int col = 0; col < livingCells.GetLength(1); col++)
+                {
+                    if (livingCells[row, col])
                     {
-                        square[row, col].Style = Application.Current.FindResource("ButtonGreen") as Style;
+                        boardCells[row, col].Style = Application.Current.FindResource("ButtonBlack") as Style;
                     }
                     else
                     {
-                        square[row, col].Style = Application.Current.FindResource("ButtonRed") as Style;
+                        boardCells[row, col].Style = Application.Current.FindResource("ButtonWhite") as Style;
                     }
-                    LayoutRoot.Children.Add(square[row, col]);
                 }
+            }
         }
 
         private void RestartButton_Click(object sender, RoutedEventArgs e)
@@ -82,6 +101,37 @@ namespace GameOfLife
             MainWindow win = new MainWindow();
             win.Show();
             this.Close();
+        }
+
+        private void RandomizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            world.AddRandomLivings();
+            UpdateBoard();
+        }
+
+        private void NextGenButton_Click(object sender, RoutedEventArgs e)
+        {
+            world.SimulateGeneration();
+            UpdateBoard();
+        }
+
+        private void CellButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            int clickedRow = (int)button.GetValue(Grid.RowProperty);
+            int clickedCol = (int)button.GetValue(Grid.ColumnProperty);
+            world.ChangeCellState(clickedRow, clickedCol);
+            UpdateBoard();
+        }
+
+        private void MulGenButton_Click(object sender, RoutedEventArgs e)
+        {
+            for (int gen = 0; gen < guic.GenNumber; gen++)
+            {
+                world.SimulateGeneration();
+                UpdateBoard();
+                Dispatcher.Invoke(new Action(() => Thread.Sleep(100)), DispatcherPriority.Background);
+            }
         }
     }
 
@@ -108,6 +158,14 @@ namespace GameOfLife
                 else width = 0;
             }
         }
+
+        private int genNumber;
+        public int GenNumber
+        {
+            get { return genNumber; }
+            set { genNumber = value; }
+        }
+
     }
 
 }

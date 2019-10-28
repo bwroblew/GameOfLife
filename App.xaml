@@ -11,5 +11,13 @@
         <Style x:Key="ButtonRed" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Red"/>
         </Style>
+
+        <Style x:Key="ButtonBlack" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Black"/>
+        </Style>
+
+        <Style x:Key="ButtonWhite" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="White"/>
+        </Style>
     </Application.Resources>
 </Application>

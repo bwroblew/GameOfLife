@@ -25,6 +25,12 @@ namespace GameOfLife
         private int blockSize;
         private int defaultBlockSize = 50;
 
+        public const float randomDensity = 0.1f;
+
+        private int minNeighboursToLive = 2;
+        private int maxNeighboursToLive = 3;
+        private int neighboursToReproduce = 3;
+
         public int BoardHeight
         {
             get => boardHeight;
@@ -45,6 +51,9 @@ namespace GameOfLife
         }
 
         public int BlockSize { get => blockSize; set => blockSize = value; }
+        public int MinNeighboursToLive { get => minNeighboursToLive; set => minNeighboursToLive = value; }
+        public int MaxNeighboursToLive { get => maxNeighboursToLive; set => maxNeighboursToLive = value; }
+        public int NeighboursToReproduce { get => neighboursToReproduce; set => neighboursToReproduce = value; }
 
         private GameSettings()
         {
