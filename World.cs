@@ -131,6 +131,22 @@ namespace GameOfLife
             }
             cellLives = newCells;
         }
+
+        public void Insert(bool[,] structure, int y, int x)
+        {
+            var height = structure.GetLength(0);
+            var width = structure.GetLength(1);
+            for (int rowOffset = 0; rowOffset < height; rowOffset++)
+            {
+                for (int colOffset = 0; colOffset < width; colOffset++)
+                {
+                    if (rowOffset + y < rows && colOffset + x < cols)
+                    {
+                        cellLives[rowOffset + y, colOffset + x] = structure[rowOffset, colOffset];
+                    }
+                }
+            }
+        }
         
     }
 }

@@ -40,7 +40,7 @@ namespace GameOfLife
                 formatter.Serialize(stream, world);
                 stream.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -58,11 +58,23 @@ namespace GameOfLife
                              GameSettings.getInstance().BoardWidth);
                 stream.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
             return true;
+        }
+
+        public List<string> GetStructuresNames()
+        {
+            List<string> structures = new List<string>(GameSettings.getInstance().structures.Keys);
+            return structures;
+        }
+
+        public void Insert(string structureName, int y, int x)
+        {
+            var structure = GameSettings.getInstance().structures[structureName];
+            world.Insert(structure, y, x);
         }
 
     }

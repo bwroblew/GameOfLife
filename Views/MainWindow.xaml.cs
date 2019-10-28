@@ -63,11 +63,47 @@ namespace GameOfLife
                     boardCells[row, col].Height = GameSettings.getInstance().BlockSize;
                     boardCells[row, col].Width = GameSettings.getInstance().BlockSize;
                     boardCells[row, col].Click += CellButton_Click;
+                    boardCells[row, col].ContextMenu = GetContextMenu();
                     Grid.SetColumn(boardCells[row, col], col);
                     Grid.SetRow(boardCells[row, col], row);
                     boardCells[row, col].Style = Application.Current.FindResource("ButtonWhite") as Style;
                     LayoutRoot.Children.Add(boardCells[row, col]);
                 }
+        }
+
+        private ContextMenu GetContextMenu()
+        {
+            var contextMenu = new ContextMenu();
+            var structures = GameManager.getInstance().GetStructuresNames();
+            foreach (var structure in structures)
+            {
+                var menuItem = new MenuItem();
+                menuItem.Header = structure;
+                menuItem.Click += ContextMenu_Click;
+                contextMenu.Items.Add(menuItem);
+            }
+            return contextMenu;
+        }
+
+        private void ContextMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            if (mi != null)
+            {
+                ContextMenu cm = mi.Parent as ContextMenu;
+                if (cm != null)
+                {
+                    Button b = cm.PlacementTarget as Button;
+                    if (b != null)
+                    {
+                        int row = (int)b.GetValue(Grid.RowProperty);
+                        int col = (int)b.GetValue(Grid.ColumnProperty);
+                        string structureName = mi.Header.ToString();
+                        GameManager.getInstance().Insert(structureName, row, col);
+                    }
+                }
+            }
+            UpdateBoard();
         }
 
         private void UpdateBoard()

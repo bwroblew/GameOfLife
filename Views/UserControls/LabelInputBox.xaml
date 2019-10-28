@@ -12,6 +12,19 @@
         </Grid.ColumnDefinitions>
         
         <Label Grid.Column="0" MinWidth="50" Content="{Binding Label}"/>
-        <TextBox Grid.Column="1" MinWidth="150" Text="{Binding Text}"/>
+        <TextBox Grid.Column="1" MinWidth="150" Text="{Binding Text}">
+            <TextBox.Triggers>
+                <EventTrigger RoutedEvent="TextBox.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation To="Red" 
+                                    Storyboard.TargetProperty="(TextBox.Background).(SolidColorBrush.Color)" 
+                                    FillBehavior="Stop" 
+                                    Duration="0:0:2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TextBox.Triggers>
+        </TextBox>
     </Grid>
 </UserControl>

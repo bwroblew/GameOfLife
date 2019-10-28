@@ -21,7 +21,10 @@ namespace GameOfLife
             BoardHeight = defaultBoardHeight;
             BoardWidth = defaultBoardWidth;
             BlockSize = defaultBlockSize;
+            InitializeStructures();
         }
+
+        public Dictionary<string, bool[,]> structures;
 
         private int boardHeight;
         private int defaultBoardHeight = 10;
@@ -67,6 +70,29 @@ namespace GameOfLife
             float scaleRatio = Math.Max((float)BoardHeight / defaultBoardHeight,
                                         (float)BoardWidth / defaultBoardWidth);
             BlockSize = Math.Max((int)(defaultBlockSize / scaleRatio), 4);
+        }
+
+        private void InitializeStructures()
+        {
+            structures = new Dictionary<string, bool[,]>();
+
+            bool[,] blinker = { { true, true, true } };
+            structures.Add("blinker", blinker);
+
+            bool[,] toad =
+            {
+                { false, true, true, true },
+                { true, true, true, false }
+            };
+            structures.Add("toad", toad);
+
+            bool[,] glider =
+            {
+                { false, true, false },
+                { false, false, true },
+                { true, true, true }
+            };
+            structures.Add("glider", glider);
         }
 
     }
