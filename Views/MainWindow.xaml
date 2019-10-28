@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:GameOfLife"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="97*" />
@@ -17,7 +18,17 @@
             <local:LabelInputBox x:Name="MinToLiveLIB" Height="30" VerticalAlignment="Top" Label="Min neighbours to live" Text="{Binding MinNeighb}" Margin="0,70,10,0"/>
             <local:LabelInputBox x:Name="MaxToLiveLIB" Height="30" VerticalAlignment="Top" Label="Max neighbours to live" Text="{Binding MaxNeighb}" Margin="0,105,10,0"/>
             <local:LabelInputBox x:Name="ToReproduceLIB" Height="30" VerticalAlignment="Top" Label="Neighbours to reproduce" Text="{Binding ToReproduce}" Margin="0,140,10,0"/>
-            <Button x:Name="RestartButton" Content="Start New Game" HorizontalAlignment="Right" Margin="0,186,10,0" VerticalAlignment="Top" Width="110" Click="RestartButton_Click"/>
+            <Button x:Name="RestartButton" Content="Start New Game" HorizontalAlignment="Right" Margin="0,186,10,0" VerticalAlignment="Top" Width="110" Click="RestartButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="Green" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button x:Name="RandomizeButton" Content="Add random units" HorizontalAlignment="Right" Margin="0,211,10,0" VerticalAlignment="Top" Width="110" Click="RandomizeButton_Click"/>
 
             <Button x:Name="NextGenButton" Content="Next gen >" HorizontalAlignment="Right" Margin="0,339,104,0" VerticalAlignment="Top" Width="80" Click="NextGenButton_Click"/>
