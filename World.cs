@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameOfLife
 {
+    [Serializable]
     class World
     {
         private bool[,] cellLives;
@@ -30,7 +31,7 @@ namespace GameOfLife
         public void AddRandomLivings()
         {
             var cellsNumber = cellLives.Length;
-            var cellsToBeBorn = randGen.Next(1, (int)(cellsNumber * GameSettings.randomDensity));
+            var cellsToBeBorn = randGen.Next(1, Math.Max((int)(cellsNumber * GameSettings.randomDensity), 1));
             for (int cell = 0; cell < cellsToBeBorn; cell++)
             {
                 var row = randGen.Next(0, rows);
@@ -110,6 +111,25 @@ namespace GameOfLife
             if (GetNeighboursCount(row, col) == GameSettings.getInstance().NeighboursToReproduce)
                 return true;
             return false;
+        }
+
+        public void Resize(int ySize, int xSize)
+        {
+            bool[,] newCells = new bool[ySize, xSize];
+            for (int row = 0; row < ySize; row++)
+            {
+                for (int col = 0; col < xSize; col++)
+                {
+                    if (row < rows && col < cols)
+                    {
+                        newCells[row, col] = cellLives[row, col];
+                    } else
+                    {
+                        newCells[row, col] = false;
+                    }
+                }
+            }
+            cellLives = newCells;
         }
         
     }

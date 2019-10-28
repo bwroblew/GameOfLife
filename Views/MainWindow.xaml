@@ -14,17 +14,19 @@
         <Grid Grid.Column="0" MinHeight="400">
             <local:LabelInputBox x:Name="WidthLIB" Height="30" VerticalAlignment="Top" Label="Width" Text="{Binding Width}" Margin="0,0,10,0"/>
             <local:LabelInputBox x:Name="HeightLIB" Height="30" VerticalAlignment="Top" Label="Height" Text="{Binding Height}" Margin="0,35,10,0"/>
-            <Button x:Name="ChangeRulesButton" Content="Change Rules" HorizontalAlignment="Right" Margin="0,72,10,0" VerticalAlignment="Top" Width="110"/>
-            <Button x:Name="RestartButton" Content="Start New Game" HorizontalAlignment="Right" Margin="0,97,10,0" VerticalAlignment="Top" Width="110" Click="RestartButton_Click"/>
-            <Button x:Name="RandomizeButton" Content="Add random units" HorizontalAlignment="Right" Margin="0,122,10,0" VerticalAlignment="Top" Width="110" Click="RandomizeButton_Click"/>
-            
-            <Button x:Name="NextGenButton" Content="Next generation >" HorizontalAlignment="Right" Margin="0,211,10,0" VerticalAlignment="Top" Width="110" Click="NextGenButton_Click"/>
-            
-            <local:LabelInputBox x:Name="MulGenLIB" Height="30" VerticalAlignment="Top" Label="Generations" Text="{Binding GenNumber}" Margin="0,247,10,0"/>
-            <Button x:Name="MulGenButton" Content="Multiple gens >>" HorizontalAlignment="Right" Margin="0,282,10,0" VerticalAlignment="Top" Width="110" Click="MulGenButton_Click"/>
+            <local:LabelInputBox x:Name="MinToLiveLIB" Height="30" VerticalAlignment="Top" Label="Min neighbours to live" Text="{Binding MinNeighb}" Margin="0,70,10,0"/>
+            <local:LabelInputBox x:Name="MaxToLiveLIB" Height="30" VerticalAlignment="Top" Label="Max neighbours to live" Text="{Binding MaxNeighb}" Margin="0,105,10,0"/>
+            <local:LabelInputBox x:Name="ToReproduceLIB" Height="30" VerticalAlignment="Top" Label="Neighbours to reproduce" Text="{Binding ToReproduce}" Margin="0,140,10,0"/>
+            <Button x:Name="RestartButton" Content="Start New Game" HorizontalAlignment="Right" Margin="0,186,10,0" VerticalAlignment="Top" Width="110" Click="RestartButton_Click"/>
+            <Button x:Name="RandomizeButton" Content="Add random units" HorizontalAlignment="Right" Margin="0,211,10,0" VerticalAlignment="Top" Width="110" Click="RandomizeButton_Click"/>
 
-            <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75"/>
-            <Button x:Name="LoadButton" Content="Load" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75"/>
+            <Button x:Name="NextGenButton" Content="Next gen >" HorizontalAlignment="Right" Margin="0,339,104,0" VerticalAlignment="Top" Width="80" Click="NextGenButton_Click"/>
+
+            <local:LabelInputBox x:Name="MulGenLIB" Height="30" VerticalAlignment="Top" Label="Generations" Text="{Binding GenNumber}" Margin="5,304,5,0"/>
+            <Button x:Name="MulGenButton" Content="Mul. gens>>" HorizontalAlignment="Right" Margin="0,339,5,0" VerticalAlignment="Top" Width="80" Click="MulGenButton_Click"/>
+
+            <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="SaveButton_Click"/>
+            <Button x:Name="LoadButton" Content="Load" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="LoadButton_Click"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid x:Name="LayoutRoot" Margin="0,0,0,0"/>

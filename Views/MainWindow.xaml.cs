@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace GameOfLife
@@ -21,25 +13,28 @@ namespace GameOfLife
     {
         private GUIContext guic = null;
         private Button[,] boardCells;
-        private World world;
 
         public MainWindow()
         {
             guic = new GUIContext
             {
                 Height = GameSettings.getInstance().BoardHeight,
-                Width = GameSettings.getInstance().BoardWidth
+                Width = GameSettings.getInstance().BoardWidth,
+                GenNumber = 1,
+                MinNeighb = GameSettings.getInstance().MinNeighboursToLive,
+                MaxNeighb = GameSettings.getInstance().MaxNeighboursToLive,
+                ToReproduce = GameSettings.getInstance().NeighboursToReproduce,
             };
 
             this.InitializeComponent();
             InitializeGUI();
+            GameManager.getInstance().InitializeGame();
         }
 
         private void InitializeGUI()
         {
             InitializeBoard();
             this.DataContext = guic;
-            world = new World();
         }
 
         private void InitializeBoard()
@@ -77,7 +72,7 @@ namespace GameOfLife
 
         private void UpdateBoard()
         {
-            var livingCells = world.GetCurrentState();
+            var livingCells = GameManager.getInstance().world.GetCurrentState();
             for (int row = 0; row < livingCells.GetLength(0); row++)
             {
                 for (int col = 0; col < livingCells.GetLength(1); col++)
@@ -98,6 +93,9 @@ namespace GameOfLife
         {
             GameSettings.getInstance().BoardHeight = guic.Height;
             GameSettings.getInstance().BoardWidth = guic.Width;
+            GameSettings.getInstance().MinNeighboursToLive = guic.MinNeighb;
+            GameSettings.getInstance().MaxNeighboursToLive = guic.MaxNeighb;
+            GameSettings.getInstance().NeighboursToReproduce = guic.ToReproduce;
             MainWindow win = new MainWindow();
             win.Show();
             this.Close();
@@ -105,13 +103,13 @@ namespace GameOfLife
 
         private void RandomizeButton_Click(object sender, RoutedEventArgs e)
         {
-            world.AddRandomLivings();
+            GameManager.getInstance().world.AddRandomLivings();
             UpdateBoard();
         }
 
         private void NextGenButton_Click(object sender, RoutedEventArgs e)
         {
-            world.SimulateGeneration();
+            GameManager.getInstance().world.SimulateGeneration();
             UpdateBoard();
         }
 
@@ -120,7 +118,7 @@ namespace GameOfLife
             Button button = sender as Button;
             int clickedRow = (int)button.GetValue(Grid.RowProperty);
             int clickedCol = (int)button.GetValue(Grid.ColumnProperty);
-            world.ChangeCellState(clickedRow, clickedCol);
+            GameManager.getInstance().world.ChangeCellState(clickedRow, clickedCol);
             UpdateBoard();
         }
 
@@ -128,10 +126,25 @@ namespace GameOfLife
         {
             for (int gen = 0; gen < guic.GenNumber; gen++)
             {
-                world.SimulateGeneration();
+                GameManager.getInstance().world.SimulateGeneration();
                 UpdateBoard();
                 Dispatcher.Invoke(new Action(() => Thread.Sleep(100)), DispatcherPriority.Background);
             }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var res = GameManager.getInstance().Save();
+            if (!res)
+                MessageBox.Show("Problem with saving game...");
+        }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var res = GameManager.getInstance().Load();
+            if (!res)
+                MessageBox.Show("Problem with loading game...");
+            UpdateBoard();
         }
     }
 
@@ -159,13 +172,15 @@ namespace GameOfLife
             }
         }
 
-        private int genNumber;
-        public int GenNumber
-        {
-            get { return genNumber; }
-            set { genNumber = value; }
-        }
+        public int GenNumber { get => genNumber; set => genNumber = value; }
+        public int MinNeighb { get => minNeighb; set => minNeighb = value; }
+        public int MaxNeighb { get => maxNeighb; set => maxNeighb = value; }
+        public int ToReproduce { get => toReproduce; set => toReproduce = value; }
 
+        private int genNumber;
+        private int minNeighb;
+        private int maxNeighb;
+        private int toReproduce;
     }
 
 }

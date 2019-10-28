@@ -16,6 +16,13 @@ namespace GameOfLife
             return instance;
         }
 
+        private GameSettings()
+        {
+            BoardHeight = defaultBoardHeight;
+            BoardWidth = defaultBoardWidth;
+            BlockSize = defaultBlockSize;
+        }
+
         private int boardHeight;
         private int defaultBoardHeight = 10;
 
@@ -54,13 +61,6 @@ namespace GameOfLife
         public int MinNeighboursToLive { get => minNeighboursToLive; set => minNeighboursToLive = value; }
         public int MaxNeighboursToLive { get => maxNeighboursToLive; set => maxNeighboursToLive = value; }
         public int NeighboursToReproduce { get => neighboursToReproduce; set => neighboursToReproduce = value; }
-
-        private GameSettings()
-        {
-            BoardHeight = defaultBoardHeight;
-            BoardWidth = defaultBoardWidth;
-            BlockSize = defaultBlockSize;
-        }
 
         private void AdjustBlockSize()
         {

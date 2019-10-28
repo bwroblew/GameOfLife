@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameManager.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="Views\UserControls\LabelInputBox.xaml.cs">
       <DependentUpon>LabelInputBox.xaml</DependentUpon>
